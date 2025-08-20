@@ -1,3 +1,6 @@
+<div class="login-header">
+  <a [routerLink]="['/register']" class="register-link">¿No tienes cuenta? Regístrate</a>
+</div>
 <p-toast></p-toast>
 <div class="login-wrapper">
   <p-card header="Iniciar Sesión" styleClass="login-card">
@@ -8,7 +11,7 @@
       </span>
 
       <span class="p-float-label">
-    <p-password id="password" formControlName="password" [toggleMask]="true" autocomplete="current-password"></p-password>
+        <p-password id="password" formControlName="password" [toggleMask]="true" autocomplete="current-password"></p-password>
         <label for="password">Contraseña</label>
       </span>
 

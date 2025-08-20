@@ -31,6 +31,10 @@ export class AuthService {
       }));
   }
 
+  register(document: string, username: string, password: string, roles: string[]) {
+    return this.http.post<any>(`${this.base}/auth/register`, { document, username, password, roles });
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');

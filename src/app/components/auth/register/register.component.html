@@ -1,0 +1,37 @@
+<div class="register-header">
+  <a [routerLink]="['/login']" class="back-link">&larr; Volver al login</a>
+</div>
+<p-toast></p-toast>
+
+<div class="register-container">
+  <p-card header="Registro de Usuario">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Documento</label>
+        <input pInputText formControlName="document" />
+      </div>
+      <div class="field">
+        <label>Usuario</label>
+        <input pInputText formControlName="username" />
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input pPassword formControlName="password" toggleMask="true" />
+      </div>
+      <div class="field">
+        <label>Confirmar Contraseña</label>
+        <input pPassword formControlName="confirmPassword" toggleMask="true" />
+      </div>
+      <div class="field">
+        <label>Roles</label>
+        <p-multiSelect formControlName="roles" [options]="[
+          {label: 'Administrador', value: 'ADMIN'},
+          {label: 'Empleado', value: 'EMPLOYEE'}
+        ]" optionLabel="label" optionValue="value" placeholder="Selecciona roles"></p-multiSelect>
+      </div>
+      <div class="actions">
+        <button pButton type="submit" label="Registrar" [disabled]="form.invalid || loading"></button>
+      </div>
+    </form>
+  </p-card>
+</div>

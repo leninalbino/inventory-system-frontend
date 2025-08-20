@@ -20,7 +20,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { AppComponent } from './shared/app.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/auth/login/login.component';
 import { ProductsComponent } from './components/products/products.component';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
