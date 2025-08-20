@@ -69,6 +69,7 @@ export class ProductsComponent implements OnInit {
     private reports: ReportService
   ) {
     this.form = this.fb.group({
+      id: [{value: '', disabled: true}], // string solo para mostrar
       name: ['', [Validators.required, Validators.maxLength(120)]],
       description: ['',[Validators.maxLength(300)]],
       price: [0, [Validators.required, Validators.min(0)]],
@@ -85,33 +86,73 @@ export class ProductsComponent implements OnInit {
   load() {
     this.loading = true;
     this.api.findAll().subscribe({
-      next: (res) => this.products = res,
+      next: (res) => {
+        // Mapear los campos de la respuesta a Product
+        this.products = res.map((p: any) => ({
+          id: p.productId ?? p.id,
+          name: p.productName ?? p.name,
+          description: p.description,
+          price: p.price,
+          quantity: p.quantity,
+          category: p.category ?? p.categoryId // Ajusta si necesitas mostrar el nombre de la categoría
+        }));
+      },
       error: () => this.toast.add({severity:'error', summary:'Error', detail:'No se pudo cargar productos'}),
       complete: () => this.loading = false
     });
   }
 
   openNew() {
-    this.editing = null;
-    this.form.reset({ price: 0, quantity: 0 });
-    this.dialog = true;
+  this.editing = null;
+  this.form.reset({ id: '', price: 0, quantity: 0 });
+  this.dialog = true;
   }
 
   edit(p: Product) {
-    this.editing = p;
-    this.form.patchValue(p);
+  
+    const mapped: Product = {
+      id: (p as any).productId ?? p.id,
+      name: (p as any).productName ?? p.name,
+      description: p.description,
+      price: p.price,
+      quantity: p.quantity,
+      category: (p as any).category ?? (p as any).categoryId
+    };
+    this.editing = mapped;
+    this.form.patchValue({
+      name: mapped.name,
+      description: mapped.description,
+      price: mapped.price,
+      quantity: mapped.quantity,
+      category: mapped.category
+    });
+    if (mapped.id !== undefined && mapped.id !== null) {
+      this.form.get('id')?.setValue(String(mapped.id));
+    } else {
+      this.form.get('id')?.reset();
+    }
     this.dialog = true;
   }
 
   save() {
     if (this.form.invalid) return;
-    const value = this.form.value as Product;
+    const raw = this.form.getRawValue();
+    const value: Product = {
+      name: raw.name ?? '',
+      description: raw.description ?? '',
+      price: raw.price ?? 0,
+      quantity: raw.quantity ?? 0,
+      category: raw.category ?? ''
+    };
+    // El id solo se usa para mostrar, no se envía en el payload
     if (this.editing?.id) {
       this.api.update(this.editing.id, value).subscribe({
         next: () => { this.toast.add({severity:'success', summary:'Actualizado'}); this.dialog=false; this.load(); },
         error: () => this.toast.add({severity:'error', summary:'Error', detail:'No se pudo actualizar'})
       });
     } else {
+      // Por si acaso, elimina id si existe en el objeto
+      if ('id' in value) delete (value as any).id;
       this.api.create(value).subscribe({
         next: () => { this.toast.add({severity:'success', summary:'Creado'}); this.dialog=false; this.load(); },
         error: () => this.toast.add({severity:'error', summary:'Error', detail:'No se pudo crear'})
@@ -120,13 +161,14 @@ export class ProductsComponent implements OnInit {
   }
 
   remove(p: Product) {
+    const id = (p as any).productId ?? p.id;
     this.confirm.confirm({
       message: `¿Eliminar "${p.name}"?`,
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.api.delete(p.id!).subscribe({
+        this.api.delete(id!).subscribe({
           next: () => { this.toast.add({severity:'success', summary:'Eliminado'}); this.load(); },
           error: () => this.toast.add({severity:'error', summary:'Error', detail:'No se pudo eliminar'})
         });
@@ -153,9 +195,13 @@ export class ProductsComponent implements OnInit {
   }
 
   get filteredProducts() {
-    return this.products.filter(p =>
-      (!this.filterName || p.name.toLowerCase().includes(this.filterName.toLowerCase())) &&
-      (!this.filterCategory || p.category?.toLowerCase().includes(this.filterCategory.toLowerCase()))
-    );
+    return this.products.filter(p => {
+      const name = (p as any).name ?? (p as any).productName ?? '';
+      const category = (p as any).category ?? (p as any).categoryId ?? '';
+      return (
+        (!this.filterName || name.toLowerCase().includes(this.filterName.toLowerCase())) &&
+        (!this.filterCategory || category.toString().toLowerCase().includes(this.filterCategory.toLowerCase()))
+      );
+    });
   }
 }

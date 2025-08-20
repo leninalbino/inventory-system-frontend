@@ -49,6 +49,10 @@
   </ng-template>
 
   <form class="form" (ngSubmit)="save()" [formGroup]="form">
+    <div class="field" *ngIf="editing">
+      <label>ID</label>
+      <input pInputText formControlName="id" readonly />
+    </div>
     <div class="field">
       <label>Nombre</label>
       <input pInputText formControlName="name" />
