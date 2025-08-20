@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build -- --configuration production
 
 FROM nginx:stable-alpine
-COPY --from=build /app/dist/inventory-system-frontend /usr/share/nginx/html
+COPY --from=build /app/dist/inventory-system-frontend/browser /usr/share/nginx/html
 # Copy a simple nginx config if you want to enable SPA fallback
 COPY default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
