@@ -1,0 +1,78 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<p-toolbar styleClass="mb-3">
+  <div class="p-toolbar-group-left">
+    <button *ngIf="isAdmin" pButton label="Nuevo" icon="pi pi-plus" (click)="openNew()"></button>
+  </div>
+  <div class="p-toolbar-group-right" style="display:flex; gap:.5rem;">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por nombre" [(ngModel)]="filterName"/>
+    </span>
+    <input pInputText type="text" placeholder="Filtrar categoría" [(ngModel)]="filterCategory"/>
+    <button pButton label="Reporte Bajo Stock (PDF)" icon="pi pi-download" (click)="downloadLowStockPdf()"></button>
+  </div>
+</p-toolbar>
+
+<p-table [value]="filteredProducts" [loading]="loading" [paginator]="true" [rows]="10">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Categoría</th>
+      <th *ngIf="isAdmin">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-p>
+    <tr [ngClass]="{'low-stock-row': p.quantity < 5}">
+      <td>{{p.name}}</td>
+      <td>{{p.description}}</td>
+      <td>{{p.price | currency:'USD':'symbol'}}</td>
+      <td>
+        <p-tag [value]="p.quantity" [severity]="p.quantity < 5 ? 'danger' : 'success'"></p-tag>
+      </td>
+      <td>{{p.category}}</td>
+      <td *ngIf="isAdmin">
+        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="edit(p)" pTooltip="Editar"></button>
+        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="remove(p)" pTooltip="Eliminar"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="dialog" [modal]="true" [style]="{width:'500px'}" [draggable]="false" [resizable]="false">
+  <ng-template pTemplate="header">
+    {{ editing ? 'Editar Producto' : 'Nuevo Producto' }}
+  </ng-template>
+
+  <form class="form" (ngSubmit)="save()" [formGroup]="form">
+    <div class="field">
+      <label>Nombre</label>
+      <input pInputText formControlName="name" />
+    </div>
+    <div class="field">
+      <label>Descripción</label>
+      <input pInputText formControlName="description" />
+    </div>
+    <div class="field">
+      <label>Precio</label>
+      <p-inputNumber formControlName="price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+    </div>
+    <div class="field">
+      <label>Cantidad</label>
+      <p-inputNumber formControlName="quantity" [min]="0"></p-inputNumber>
+    </div>
+    <div class="field">
+      <label>Categoría</label>
+      <p-dropdown [options]="categories" formControlName="category" optionLabel="label" optionValue="value"></p-dropdown>
+    </div>
+
+    <div class="actions">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="dialog=false"></button>
+      <button pButton type="submit" label="Guardar" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</p-dialog>

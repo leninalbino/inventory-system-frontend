@@ -1,0 +1,11 @@
+<div class="layout">
+  <header class="topbar">
+    <div class="brand">Inventory</div>
+    <div class="spacer"></div>
+    <button *ngIf="auth.isAuthenticated()" pButton label="Salir" icon="pi pi-sign-out" (click)="logout()"></button>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
