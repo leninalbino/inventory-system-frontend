@@ -36,8 +36,8 @@
       </td>
       <td>{{p.category}}</td>
       <td *ngIf="isAdmin">
-        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="edit(p)" pTooltip="Editar"></button>
-        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="remove(p)" pTooltip="Eliminar"></button>
+  <button pButton icon="pi pi-pencil" class="action-btn edit" (click)="edit(p)" pTooltip="Editar"></button>
+  <button pButton icon="pi pi-trash" class="action-btn delete" (click)="remove(p)" pTooltip="Eliminar"></button>
       </td>
     </tr>
   </ng-template>

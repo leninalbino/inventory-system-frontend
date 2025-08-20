@@ -79,7 +79,7 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isAdmin = this.auth.hasRole('ROLE_ADMIN');
+  this.isAdmin = this.auth.hasRole('ROLE_ADMIN') || this.auth.hasRole('ADMIN');
     this.load();
   }
 
