@@ -54,10 +54,8 @@ export class ProductsComponent implements OnInit {
   form;
 
   categories = [
-    {label:'Electrónica', value:'Electronics'},
-    {label:'Hogar', value:'Home'},
-    {label:'Ropa', value:'Clothes'},
-    {label:'Otros', value:'Others'}
+    {label:'Electrónica', value: 1},
+    {label:'Hogar', value: 2},
   ];
 
   constructor(
@@ -114,7 +112,8 @@ export class ProductsComponent implements OnInit {
       id: (p as any).productId ?? p.id,
       name: (p as any).productName ?? p.name,
       description: p.description,
-      price: p.price,
+      // price como string decimal siempre (ej: '10.0')
+      price: Number.isFinite(Number(p.price)) ? String(Number(p.price).toFixed(1)) : '0.0',
       quantity: p.quantity,
       category: (p as any).category ?? (p as any).categoryId
     };
@@ -122,7 +121,8 @@ export class ProductsComponent implements OnInit {
     this.form.patchValue({
       name: mapped.name,
       description: mapped.description,
-      price: mapped.price,
+      // Convertir a number para el form
+      price: Number(mapped.price),
       quantity: mapped.quantity,
       category: mapped.category
     });
@@ -140,10 +140,12 @@ export class ProductsComponent implements OnInit {
     const value: Product = {
       name: raw.name ?? '',
       description: raw.description ?? '',
-      price: raw.price ?? 0,
+    // price como string decimal siempre (ej: '10.0')
+    price: Number.isFinite(raw.price) ? String(Number(raw.price).toFixed(1)) : '0.0',
       quantity: raw.quantity ?? 0,
       category: raw.category ?? ''
     };
+    console.log(value);
     // El id solo se usa para mostrar, no se envía en el payload
     if (this.editing?.id) {
       this.api.update(this.editing.id, value).subscribe({
