@@ -1,9 +1,25 @@
+/* Responsive login header */
 .login-header {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding: 1.5rem 2rem 0 2rem;
   margin-bottom: 2rem;
+}
+
+@media (max-width: 600px) {
+  .login-header {
+    padding: 1rem 0.5rem 0 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .login-card {
+    max-width: 98vw;
+    min-width: 0;
+  }
+  .login-wrapper {
+    min-height: 60vh;
+    padding: 0 0.5rem;
+  }
 }
 
 .register-link {

@@ -23,18 +23,10 @@ import { AppComponent } from './shared/app.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { ProductsComponent } from './components/products/products.component';
 
-import { AuthInterceptor } from './interceptors/auth.interceptor';
-
 import { MessageService, ConfirmationService } from 'primeng/api';
-import Aura from '@primeuix/themes/aura';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    ProductsComponent
-  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -61,7 +53,7 @@ import Aura from '@primeuix/themes/aura';
     ConfirmationService,
   // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
 export class AppModule { }
 

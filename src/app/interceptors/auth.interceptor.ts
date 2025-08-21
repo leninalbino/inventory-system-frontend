@@ -5,16 +5,17 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // No agregar token si la URL es login o register
+    const isAuthEndpoint = req.url.includes('/login') || req.url.includes('/register');
+    if (isAuthEndpoint) {
+      return next.handle(req);
+    }
     const token = localStorage.getItem('token');
     if (token) {
-      console.log('[AuthInterceptor] Token encontrado:', token);
       const authReq = req.clone({
         setHeaders: { Authorization: `Bearer ${token}` }
       });
-      console.log('[AuthInterceptor] Header Authorization agregado:', authReq.headers.get('Authorization'));
       return next.handle(authReq);
-    } else {
-      console.log('[AuthInterceptor] No se encontró token en localStorage');
     }
     return next.handle(req);
   }

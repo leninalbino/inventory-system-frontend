@@ -24,11 +24,46 @@
 .p-table .p-tag {
   z-index: 1;
 }
+
 .p-table td {
   overflow: visible !important;
 }
-.p-table td {
-  overflow: visible !important;
+
+/* Responsive tabla y botones */
+@media (max-width: 900px) {
+  .p-table th, .p-table td {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.3rem;
+  }
+  .action-btn {
+    min-width: 28px;
+    height: 22px;
+    font-size: 15px;
+    padding: 0 3px;
+    margin: 0 2px;
+  }
+}
+@media (max-width: 600px) {
+  .p-table th, .p-table td {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.1rem;
+  }
+  .action-btn {
+    min-width: 22px;
+    height: 18px;
+    font-size: 13px;
+    padding: 0 1px;
+    margin: 0 1px;
+  }
+  .p-toolbar-group-left, .p-toolbar-group-right {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: stretch;
+  }
+  .p-toolbar-group-right {
+    margin-top: 0.5rem;
+  }
 }
 
 /* Botón Editar */

@@ -3,3 +3,17 @@
 .brand { font-weight: 700; }
 .spacer { flex: 1; }
 .content { padding: 1rem; flex:1; }
+
+/* --- Responsive general layout --- */
+@media (max-width: 900px) {
+	.content {
+		padding: 0.5rem;
+	}
+	.topbar {
+		flex-direction: row;
+		gap: 0.5rem;
+		padding: 0.5rem 0.5rem;
+		align-items: flex-end;
+        align-items: center;
+	}
+}
