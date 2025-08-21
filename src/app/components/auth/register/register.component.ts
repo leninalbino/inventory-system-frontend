@@ -43,6 +43,7 @@ export class RegisterComponent {
     this.form = this.fb.group({
       document: ['', Validators.required],
       username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       roles: [[], Validators.required]
@@ -51,13 +52,13 @@ export class RegisterComponent {
 
   submit() {
     if (this.form.invalid) return;
-    const { document, username, password, confirmPassword, roles } = this.form.value as any;
+  const { document, username, email, password, confirmPassword, roles } = this.form.value as any;
     if (password !== confirmPassword) {
       this.toast.add({severity:'error', summary:'Error', detail:'Las contraseñas no coinciden'});
       return;
     }
     this.loading = true;
-    this.auth.register(document, username, password, roles).subscribe({
+  this.auth.register(document, username, email, password, roles).subscribe({
       next: () => {
         this.toast.add({severity:'success', summary:'OK', detail:'Usuario registrado'});
         this.router.navigate(['/login']);

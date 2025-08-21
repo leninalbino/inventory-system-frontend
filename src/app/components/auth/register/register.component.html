@@ -15,6 +15,14 @@
         <input pInputText formControlName="username" />
       </div>
       <div class="field">
+        <label>Email</label>
+        <input pInputText formControlName="email" type="email" />
+        <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error-msg">
+          <span *ngIf="form.get('email')?.errors?.['required']">El email es obligatorio.</span>
+          <span *ngIf="form.get('email')?.errors?.['email']">El email no es válido.</span>
+        </div>
+      </div>
+      <div class="field">
         <label>Contraseña</label>
         <input pPassword formControlName="password" toggleMask="true" />
       </div>
