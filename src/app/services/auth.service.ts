@@ -59,6 +59,6 @@ export class AuthService {
   }
 
   hasRole(role: string): boolean {
-    return this.getRoles().includes(role);
+    return this.getRoles().includes(role.toLocaleUpperCase());
   }
 }
