@@ -59,6 +59,7 @@ export class AuthService {
   }
 
   hasRole(role: string): boolean {
-    return this.getRoles().includes(role.toLocaleUpperCase());
+    const rol = this.getRoles().map(r => r.toLocaleUpperCase());
+    return rol.includes(role.toLocaleUpperCase());
   }
 }
