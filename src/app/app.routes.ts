@@ -2,12 +2,43 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { ProductsComponent } from './components/products/products.component';
-import { RoleGuard } from './guards/role.guard';
+import { AdminDashboardComponent } from './components/admin/admin-dashboard.component';
+import { ReportsComponent } from './components/reports/reports.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'products', component: ProductsComponent, canActivate: [RoleGuard] },
+  { 
+    path: 'products', 
+    component: ProductsComponent, 
+    canActivate: [AuthGuard],
+    data: { 
+      title: 'Productos', 
+      roles: ['ROLE_EMPLOYEE', 'ROLE_ADMIN'],
+      requireAll: false // Usuario necesita AL MENOS uno de estos roles
+    }
+  },
+  { 
+    path: 'admin', 
+    component: AdminDashboardComponent, 
+    canActivate: [AuthGuard],
+    data: { 
+      title: 'Administración', 
+      roles: ['ROLE_ADMIN'],
+      requireAll: true // Usuario debe tener específicamente el rol ADMIN
+    }
+  },
+  { 
+    path: 'reports', 
+    component: ReportsComponent, 
+    canActivate: [AuthGuard],
+    data: { 
+      title: 'Reportes', 
+      roles: ['ROLE_ADMIN'],
+      requireAll: true // Usuario debe tener específicamente el rol ADMIN
+    }
+  },
   { path: '', redirectTo: 'products', pathMatch: 'full' },
   { path: '**', redirectTo: 'products' }
 ];

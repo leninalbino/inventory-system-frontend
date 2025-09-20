@@ -1,47 +1,93 @@
-/* Estilos básicos para el formulario de registro */
+.register-page {
+  height: 100vh;
+  overflow: hidden;
+}
+
 .register-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  margin-top: 0;
+  height: 100%;
 }
 
-.register-header {
+.register-image-section {
+  flex: 1;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  padding: 1.5rem 2rem 0 2rem;
-  margin-bottom: 2rem;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
 }
 
-.field {
-  margin-bottom: 1.5rem;
+.image-content h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.image-content p {
+  font-size: 1.2rem;
+}
+
+.register-form-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #121212;
+  color: #fff;
+}
+
+.register-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+::ng-deep .p-card {
+  background-color: #1e1e1e;
+  border-radius: 15px;
+  padding: 1rem;
+  border: 1px solid #2a5298;
+}
+
+.register-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.form-field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.field label {
-  margin-bottom: 0.2rem;
+.form-field label {
+  margin-bottom: 0.5rem;
   font-weight: 500;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.back-link {
   color: #fff;
-  text-decoration: underline;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: color 0.2s;
-  margin-left: auto;
 }
 
-.back-link:hover {
-  color: #1de9b6;
+::ng-deep .p-password,
+::ng-deep .p-password .p-inputtext,
+::ng-deep .p-inputtext,
+::ng-deep .p-multiselect {
+  width: 100%;
+  background-color: #2a2a2a;
+  border: 1px solid #2a5298;
+  color: #fff;
+}
+
+.register-footer a {
+  color: #2a5298;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .register-image-section {
+    display: none;
+  }
+  .register-form-section {
+    flex: 2;
+  }
 }

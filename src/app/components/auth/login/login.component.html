@@ -1,21 +1,40 @@
-<p-toast></p-toast>
-<div class="login-page login-wrapper">
-  <p-card header="Iniciar Sesión" styleClass="login-card">
-    <form (ngSubmit)="submit()" [formGroup]="form" class="form">
-      <span class="p-float-label">
-        <label for="document">Documento / Usuario</label>
-        <input pInputText id="document" formControlName="document" autocomplete="username" />
-      </span>
-      
-      <span class="p-float-label">
-        <label for="password">Contraseña</label>
-        <p-password id="password" formControlName="password" [toggleMask]="true" autocomplete="current-password"></p-password>
-      </span>
-      
-      <button pButton type="submit" label="Entrar" icon="pi pi-sign-in" [loading]="loading"></button>
-    </form>
-    <div class="login-header">
-      <a [routerLink]="['/register']" class="register-link">¿No tienes cuenta? Regístrate</a>
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-image-section">
+      <div class="image-content">
+        <h1>Bienvenido</h1>
+        <p>Sistema de Inventario</p>
+      </div>
     </div>
-  </p-card>
+    <div class="login-form-section">
+      <p-toast></p-toast>
+      <div class="login-box">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="login-header">
+              <h2>Iniciar Sesión</h2>
+            </div>
+          </ng-template>
+          <form (ngSubmit)="submit()" [formGroup]="form" class="login-form">
+            <div class="form-field">
+              <label for="document">Documento / Usuario</label>
+              <input pInputText id="document" formControlName="document" autocomplete="username" />
+            </div>
+            <div class="form-field">
+              <label for="password">Contraseña</label>
+              <p-password id="password" formControlName="password" [toggleMask]="true" autocomplete="current-password"></p-password>
+            </div>
+            <div class="form-field">
+              <button pButton type="submit" label="Entrar" icon="pi pi-sign-in" [loading]="loading" class="p-button-raised p-button-rounded w-full"></button>
+            </div>
+          </form>
+          <ng-template pTemplate="footer">
+            <div class="login-footer">
+              <a [routerLink]="['/register']">¿No tienes cuenta? Regístrate</a>
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
+    </div>
+  </div>
 </div>

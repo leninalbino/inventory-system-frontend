@@ -1,45 +1,59 @@
-<div class="register-header">
-  <a [routerLink]="['/login']" class="back-link">&larr; Volver al login</a>
-</div>
-<p-toast></p-toast>
-
-<div class="register-container">
-  <p-card header="Registro de Usuario">
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <div class="field">
-        <label>Documento</label>
-        <input pInputText formControlName="document" />
+<div class="register-page">
+  <div class="register-container">
+    <div class="register-image-section">
+      <div class="image-content">
+        <h1>Crear Cuenta</h1>
+        <p>Sistema de Inventario</p>
       </div>
-      <div class="field">
-        <label>Usuario</label>
-        <input pInputText formControlName="username" />
+    </div>
+    <div class="register-form-section">
+      <p-toast></p-toast>
+      <div class="register-box">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="register-header">
+              <h2>Registro de Usuario</h2>
+            </div>
+          </ng-template>
+          <form [formGroup]="form" (ngSubmit)="submit()" class="register-form">
+            <div class="form-field">
+              <label>Documento</label>
+              <input pInputText formControlName="document" />
+            </div>
+            <div class="form-field">
+              <label>Usuario</label>
+              <input pInputText formControlName="username" />
+            </div>
+            <div class="form-field">
+              <label>Email</label>
+              <input pInputText formControlName="email" type="email" />
+            </div>
+            <div class="form-field">
+              <label>Contraseña</label>
+              <p-password formControlName="password" [toggleMask]="true"></p-password>
+            </div>
+            <div class="form-field">
+              <label>Confirmar Contraseña</label>
+              <p-password formControlName="confirmPassword" [toggleMask]="true"></p-password>
+            </div>
+            <div class="form-field">
+              <label>Roles</label>
+              <p-multiSelect formControlName="roles" [options]="[
+                {label: 'Administrador', value: 'ADMIN'},
+                {label: 'Empleado', value: 'EMPLOYEE'}
+              ]" optionLabel="label" optionValue="value" placeholder="Selecciona roles"></p-multiSelect>
+            </div>
+            <div class="form-field">
+              <button pButton type="submit" label="Registrar" [disabled]="form.invalid || loading" class="p-button-raised p-button-rounded w-full"></button>
+            </div>
+          </form>
+          <ng-template pTemplate="footer">
+            <div class="register-footer">
+              <a [routerLink]="['/login']">¿Ya tienes cuenta? Inicia Sesión</a>
+            </div>
+          </ng-template>
+        </p-card>
       </div>
-      <div class="field">
-        <label>Email</label>
-        <input pInputText formControlName="email" type="email" />
-        <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error-msg">
-          <span *ngIf="form.get('email')?.errors?.['required']">El email es obligatorio.</span>
-          <span *ngIf="form.get('email')?.errors?.['email']">El email no es válido.</span>
-        </div>
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input pPassword formControlName="password" toggleMask="true" />
-      </div>
-      <div class="field">
-        <label>Confirmar Contraseña</label>
-        <input pPassword formControlName="confirmPassword" toggleMask="true" />
-      </div>
-      <div class="field">
-        <label>Roles</label>
-        <p-multiSelect formControlName="roles" [options]="[
-          {label: 'Administrador', value: 'ADMIN'},
-          {label: 'Empleado', value: 'EMPLOYEE'}
-        ]" optionLabel="label" optionValue="value" placeholder="Selecciona roles"></p-multiSelect>
-      </div>
-      <div class="actions">
-        <button pButton type="submit" label="Registrar" [disabled]="form.invalid || loading"></button>
-      </div>
-    </form>
-  </p-card>
+    </div>
+  </div>
 </div>
