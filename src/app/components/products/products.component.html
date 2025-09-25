@@ -3,7 +3,10 @@
 
 <p-toolbar styleClass="mb-3">
   <div class="p-toolbar-group-left">
-    <button *ngIf="isAdmin" pButton label="Nuevo" icon="pi pi-plus" (click)="openNew()"></button>
+    <button *ngIf="isAdmin" type="button" class="toolbar-btn create-btn" (click)="openNew()">
+      <i class="pi pi-plus"></i>
+      <span>Nuevo</span>
+    </button>
   </div>
   <div class="p-toolbar-group-right" style="display:flex; gap:.5rem;">
     <span class="p-input-icon-left">
@@ -11,7 +14,10 @@
       <input pInputText type="text" placeholder="Buscar por nombre" [(ngModel)]="filterName"/>
     </span>
     <input pInputText type="text" placeholder="Filtrar categoría" [(ngModel)]="filterCategory"/>
-    <button pButton label="Reporte Bajo Stock (PDF)" icon="pi pi-download" (click)="downloadLowStockPdf()"></button>
+    <button type="button" class="toolbar-btn report-btn" (click)="downloadLowStockPdf()">
+      <i class="pi pi-download"></i>
+      <span>Reporte PDF</span>
+    </button>
   </div>
 </p-toolbar>
 
@@ -36,8 +42,16 @@
       </td>
       <td>{{p.category}}</td>
       <td *ngIf="isAdmin">
-  <button pButton icon="pi pi-pencil" class="action-btn edit" (click)="edit(p)" pTooltip="Editar"></button>
-  <button pButton icon="pi pi-trash" class="action-btn delete" (click)="remove(p)" pTooltip="Eliminar"></button>
+        <div class="action-buttons">
+          <button type="button" class="action-btn edit-btn" (click)="edit(p)" pTooltip="Editar producto">
+            <i class="pi pi-pencil"></i>
+            <span class="btn-text">Editar</span>
+          </button>
+          <button type="button" class="action-btn delete-btn" (click)="remove(p)" pTooltip="Eliminar producto">
+            <i class="pi pi-trash"></i>
+            <span class="btn-text">Eliminar</span>
+          </button>
+        </div>
       </td>
     </tr>
   </ng-template>
@@ -74,9 +88,15 @@
       <p-dropdown [options]="categories" formControlName="category" optionLabel="label" optionValue="value"></p-dropdown>
     </div>
 
-    <div class="actions">
-      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="dialog=false"></button>
-      <button pButton type="submit" label="Guardar" [disabled]="form.invalid"></button>
+    <div class="form-actions">
+      <button type="button" class="form-btn cancel-btn" (click)="dialog=false">
+        <i class="pi pi-times"></i>
+        <span>Cancelar</span>
+      </button>
+      <button type="submit" class="form-btn submit-btn" [disabled]="form.invalid">
+        <i class="pi pi-check"></i>
+        <span>{{ editing ? 'Actualizar' : 'Guardar' }}</span>
+      </button>
     </div>
   </form>
 </p-dialog>

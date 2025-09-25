@@ -9,10 +9,10 @@ import {
   inject,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { 
-  FormBuilder, 
-  FormGroup, 
-  ReactiveFormsModule, 
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
   Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -43,8 +43,8 @@ import { Product, CreateProductRequest, SelectOption } from '../../models';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="p-fluid">
-      
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="p-fluid product-form">
+
       <!-- Nombre del producto -->
       <div class="field">
         <label for="name" class="block text-900 font-medium mb-2">
@@ -58,9 +58,9 @@ import { Product, CreateProductRequest, SelectOption } from '../../models';
           placeholder="Ingrese el nombre del producto"
           [class.ng-invalid]="isFieldInvalid('name')"
           class="w-full" />
-        
-        <small 
-          *ngIf="getFieldError('name')" 
+
+        <small
+          *ngIf="getFieldError('name')"
           class="p-error block mt-1">
           {{ getFieldError('name') }}
         </small>
@@ -96,9 +96,9 @@ import { Product, CreateProductRequest, SelectOption } from '../../models';
           placeholder="0.00"
           class="w-full">
         </p-inputNumber>
-        
-        <small 
-          *ngIf="getFieldError('price')" 
+
+        <small
+          *ngIf="getFieldError('price')"
           class="p-error block mt-1">
           {{ getFieldError('price') }}
         </small>
@@ -117,9 +117,9 @@ import { Product, CreateProductRequest, SelectOption } from '../../models';
           placeholder="0"
           class="w-full">
         </p-inputNumber>
-        
-        <small 
-          *ngIf="getFieldError('quantity')" 
+
+        <small
+          *ngIf="getFieldError('quantity')"
           class="p-error block mt-1">
           {{ getFieldError('quantity') }}
         </small>
@@ -139,46 +139,144 @@ import { Product, CreateProductRequest, SelectOption } from '../../models';
           optionValue="value"
           class="w-full">
         </p-dropdown>
-        
-        <small 
-          *ngIf="getFieldError('categoryId')" 
+
+        <small
+          *ngIf="getFieldError('categoryId')"
           class="p-error block mt-1">
           {{ getFieldError('categoryId') }}
         </small>
       </div>
 
       <!-- Mensaje de error general -->
-      <p-message 
+      <p-message
         *ngIf="formError"
-        severity="error" 
+        severity="error"
         [text]="formError"
         class="mb-3">
       </p-message>
 
       <!-- Botones -->
-      <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 surface-border">
-        <p-button
+      <div class="form-actions">
+        <button
           type="button"
-          label="Cancelar"
-          icon="pi pi-times"
-          severity="secondary"
-          [outlined]="true"
+          class="form-btn cancel-btn"
           (click)="onCancel()"
-          [disabled]="loading"
-          [style]="{'min-width': '8rem'}">
-        </p-button>
-        
-        <p-button
+          [disabled]="loading">
+          <i class="pi pi-times"></i>
+          <span>Cancelar</span>
+        </button>
+
+        <button
           type="submit"
-          [label]="isEditMode ? 'Actualizar Producto' : 'Crear Producto'"
-          [icon]="loading ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')"
-          [loading]="loading"
+          class="form-btn submit-btn"
           [disabled]="productForm.invalid || loading"
-          [style]="{'min-width': '10rem'}">
-        </p-button>
+          [class.loading]="loading">
+          <i [class]="loading ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')"></i>
+          <span>{{ isEditMode ? 'Actualizar Producto' : 'Crear Producto' }}</span>
+        </button>
       </div>
     </form>
-  `
+  `,
+  styles: [`
+    .product-form {
+      max-width: 100%;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .form-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 1.25;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-decoration: none;
+      min-width: 8rem;
+      justify-content: center;
+    }
+
+    .form-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .cancel-btn {
+      color: #6b7280;
+      border-color: #d1d5db;
+      background-color: white;
+    }
+
+    .cancel-btn:hover:not(:disabled) {
+      background-color: #f9fafb;
+      border-color: #9ca3af;
+      color: #374151;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-btn {
+      color: white;
+      background-color: #10b981;
+      border-color: #10b981;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background-color: #059669;
+      border-color: #047857;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .submit-btn.loading {
+      background-color: #6ee7b7;
+      border-color: #6ee7b7;
+      cursor: wait;
+    }
+
+    .form-btn i {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-actions {
+        gap: 0.75rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+      }
+
+      .form-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+        min-width: 6rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-actions {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+      }
+
+      .form-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  `]
 })
 export class ProductFormComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
@@ -218,7 +316,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   private updateFormWithProduct(): void {
     this.isEditMode = this.product !== null;
-    
+
     if (this.product) {
       this.productForm.patchValue({
         name: this.product.name,
@@ -241,7 +339,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
   onSubmit(): void {
     if (this.productForm.valid) {
       const formValue = this.productForm.getRawValue();
-      
+
       const productRequest: CreateProductRequest = {
         name: formValue.name.trim(),
         description: formValue.description?.trim() || '',
@@ -267,7 +365,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   getFieldError(fieldName: string): string | null {
     const field = this.productForm.get(fieldName);
-    
+
     if (!this.isFieldInvalid(fieldName)) {
       return null;
     }
@@ -279,7 +377,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     if (errors['minlength']) return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
     if (errors['maxlength']) return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
     if (errors['min']) return `El valor mínimo es ${errors['min'].min}`;
-    
+
     return 'Campo inválido';
   }
 

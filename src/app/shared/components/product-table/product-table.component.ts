@@ -1,8 +1,8 @@
-import { 
-  Component, 
-  Input, 
-  Output, 
-  EventEmitter, 
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -37,15 +37,15 @@ import { Product } from '../../models';
       <div class="flex justify-content-between align-items-center mb-3" *ngIf="showFilters">
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
-          <input 
-            pInputText 
-            type="text" 
+          <input
+            pInputText
+            type="text"
             [(ngModel)]="nameFilter"
             (input)="onFilterChange()"
             placeholder="Buscar por nombre..."
             class="w-20rem">
         </span>
-        
+
         <div class="flex align-items-center gap-2" *ngIf="totalValue > 0">
           <span class="text-sm text-600">
             Valor total: <strong>{{ totalValue | currency:'USD':'symbol':'1.2-2' }}</strong>
@@ -54,12 +54,12 @@ import { Product } from '../../models';
       </div>
 
       <!-- Tabla -->
-      <p-table 
+      <p-table
         [value]="filteredProducts"
         [loading]="loading"
         [rowHover]="true"
         [responsive]="true">
-        
+
         <ng-template pTemplate="header">
           <tr>
             <th>Nombre</th>
@@ -78,36 +78,36 @@ import { Product } from '../../models';
             <td>{{ product.price | currency:'USD':'symbol':'1.2-2' }}</td>
             <td>{{ product.quantity }}</td>
             <td>
-              <p-tag 
+              <p-tag
                 [value]="getStockLabel(product)"
                 [severity]="getStockSeverity(product)">
               </p-tag>
             </td>
             <td *ngIf="showActions">
-              <div class="flex gap-2 justify-content-center">
-                <p-button
-                  icon="pi pi-pencil"
-                  size="small"
-                  severity="info"
-                  [outlined]="true"
+              <div class="action-buttons">
+                <button
+                  type="button"
+                  class="action-btn edit-btn"
                   pTooltip="Editar producto"
                   tooltipPosition="top"
                   (click)="onEdit(product)"
                   [disabled]="!canEdit"
-                  [style]="{'min-width': '2.5rem'}">
-                </p-button>
-                
-                <p-button
-                  icon="pi pi-trash"
-                  size="small"
-                  severity="danger"
-                  [outlined]="true"
+                  [attr.aria-label]="'Editar producto ' + product.name">
+                  <i class="pi pi-pencil"></i>
+                  <span class="btn-text">Editar</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="action-btn delete-btn"
                   pTooltip="Eliminar producto"
                   tooltipPosition="top"
                   (click)="onDelete(product)"
                   [disabled]="!canDelete"
-                  [style]="{'min-width': '2.5rem'}">
-                </p-button>
+                  [attr.aria-label]="'Eliminar producto ' + product.name">
+                  <i class="pi pi-trash"></i>
+                  <span class="btn-text">Eliminar</span>
+                </button>
               </div>
             </td>
           </tr>
@@ -141,9 +141,97 @@ import { Product } from '../../models';
     :host ::ng-deep .p-datatable-tbody > tr.low-stock > td {
       background-color: var(--orange-50);
     }
-    
+
     :host ::ng-deep .p-datatable-tbody > tr.out-of-stock > td {
       background-color: var(--red-50);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-decoration: none;
+      background: transparent;
+      min-height: 2.25rem;
+    }
+
+    .action-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .edit-btn {
+      color: #0ea5e9;
+      border-color: #0ea5e9;
+      background-color: rgba(14, 165, 233, 0.1);
+    }
+
+    .edit-btn:hover:not(:disabled) {
+      background-color: #0ea5e9;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+    }
+
+    .delete-btn {
+      color: #ef4444;
+      border-color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .delete-btn:hover:not(:disabled) {
+      background-color: #ef4444;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .action-btn {
+        padding: 0.375rem 0.5rem;
+        min-width: auto;
+      }
+
+      .btn-text {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .action-buttons {
+        flex-direction: row;
+        gap: 0.25rem;
+      }
+
+      .action-btn {
+        padding: 0.25rem;
+        border-radius: 0.375rem;
+      }
     }
   `]
 })
@@ -166,7 +254,7 @@ export class ProductTableComponent {
     if (!this.nameFilter) {
       return this.products;
     }
-    return this.products.filter(p => 
+    return this.products.filter(p =>
       p.name.toLowerCase().includes(this.nameFilter.toLowerCase())
     );
   }
@@ -190,8 +278,8 @@ export class ProductTableComponent {
   }
 
   onFilterChange(): void {
-    this.filterChange.emit({ 
-      name: this.nameFilter || undefined 
+    this.filterChange.emit({
+      name: this.nameFilter || undefined
     });
   }
 

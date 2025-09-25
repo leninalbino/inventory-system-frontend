@@ -45,38 +45,38 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
               ({{ productStore.totalProducts() }} productos)
             </span>
           </div>
-          
+
           <div class="p-toolbar-group-end">
             <div class="flex gap-2">
               <!-- Reportes -->
-              <p-button
-                label="Reporte Stock Bajo"
-                icon="pi pi-file-pdf"
-                severity="warn"
-                [outlined]="true"
+              <button
+                class="toolbar-btn report-btn"
                 [disabled]="productStore.lowStockProducts().length === 0"
-                (onClick)="downloadLowStockReport()"
+                (click)="downloadLowStockReport()"
                 pTooltip="Descargar PDF de productos con stock bajo">
-              </p-button>
-              
+                <i class="pi pi-file-pdf"></i>
+                <span>Reporte Stock Bajo</span>
+              </button>
+
               <!-- Refrescar -->
-              <p-button
-                icon="pi pi-refresh"
-                severity="secondary"
-                [outlined]="true"
-                [loading]="productStore.loading()"
-                (onClick)="refreshProducts()"
+              <button
+                class="toolbar-btn refresh-btn"
+                [class.loading]="productStore.loading()"
+                (click)="refreshProducts()"
                 pTooltip="Actualizar lista">
-              </p-button>
-              
+                <i [class]="productStore.loading() ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"></i>
+                <span class="btn-text-desktop">Actualizar</span>
+              </button>
+
               <!-- Crear producto -->
-              <p-button
-                label="Nuevo Producto"
-                icon="pi pi-plus"
+              <button
+                class="toolbar-btn create-btn"
                 [disabled]="!canCreateProduct()"
-                (onClick)="openCreateDialog()"
+                (click)="openCreateDialog()"
                 pTooltip="Crear nuevo producto">
-              </p-button>
+                <i class="pi pi-plus"></i>
+                <span>Nuevo Producto</span>
+              </button>
             </div>
           </div>
         </p-toolbar>
@@ -115,11 +115,12 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
         <i class="pi pi-exclamation-triangle text-4xl text-red-500 mb-3"></i>
         <h3 class="text-xl text-red-500 mb-2">Error al cargar productos</h3>
         <p class="text-600 mb-4">{{ productStore.error() }}</p>
-        <p-button 
-          label="Reintentar" 
-          icon="pi pi-refresh"
-          (onClick)="refreshProducts()">
-        </p-button>
+        <button
+          class="toolbar-btn retry-btn"
+          (click)="refreshProducts()">
+          <i class="pi pi-refresh"></i>
+          <span>Reintentar</span>
+        </button>
       </div>
 
       <!-- Tabla de productos -->
@@ -135,13 +136,13 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
       </app-product-table>
 
       <!-- Dialog para crear/editar -->
-      <p-dialog 
+      <p-dialog
         header="{{ isEditing() ? 'Editar Producto' : 'Nuevo Producto' }}"
         [modal]="true"
         [(visible)]="showDialog"
         [style]="{width: '600px'}"
         [closable]="!formLoading">
-        
+
         <app-product-form
           [product]="selectedProduct()"
           [categories]="categories"
@@ -155,7 +156,7 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
 
     <!-- Toast notifications -->
     <p-toast></p-toast>
-    
+
     <!-- Confirm dialogs -->
     <p-confirmDialog></p-confirmDialog>
   `,
@@ -163,10 +164,107 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
     .layout-content {
       padding: 1rem;
     }
-    
+
+    .toolbar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.25;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-decoration: none;
+      background: transparent;
+    }
+
+    .toolbar-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .report-btn {
+      color: #f59e0b;
+      border-color: #f59e0b;
+      background-color: rgba(245, 158, 11, 0.1);
+    }
+
+    .report-btn:hover:not(:disabled) {
+      background-color: #f59e0b;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .refresh-btn {
+      color: #6b7280;
+      border-color: #d1d5db;
+      background-color: rgba(107, 114, 128, 0.1);
+    }
+
+    .refresh-btn:hover:not(:disabled) {
+      background-color: #6b7280;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(107, 114, 128, 0.3);
+    }
+
+    .refresh-btn.loading {
+      background-color: rgba(107, 114, 128, 0.2);
+      cursor: wait;
+    }
+
+    .create-btn {
+      color: white;
+      background-color: #10b981;
+      border-color: #10b981;
+    }
+
+    .create-btn:hover:not(:disabled) {
+      background-color: #059669;
+      border-color: #047857;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .retry-btn {
+      color: #3b82f6;
+      border-color: #3b82f6;
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .retry-btn:hover:not(:disabled) {
+      background-color: #3b82f6;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
     @media (max-width: 768px) {
       .layout-content {
         padding: 0.5rem;
+      }
+
+      .toolbar-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
+      }
+
+      .btn-text-desktop {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .toolbar-btn {
+        padding: 0.375rem 0.5rem;
+      }
+
+      .toolbar-btn span {
+        display: none;
       }
     }
   `]
@@ -184,7 +282,7 @@ export class ProductsPageComponent implements OnInit {
   selectedProduct = signal<Product | null>(null);
   formLoading = false;
   formError: string | null = null;
-  
+
   // 📝 Datos para el formulario
   categories: SelectOption<number>[] = [
     { label: 'Electrónica', value: 1 },
@@ -206,8 +304,8 @@ export class ProductsPageComponent implements OnInit {
     return true; // Temporal: siempre permitir para pruebas
   });
   showStats = computed(() => this.productStore.hasProducts());
-  
-  availableProducts = computed(() => 
+
+  availableProducts = computed(() =>
     this.productStore.products().filter(p => p.quantity > 0).length
   );
 
@@ -273,7 +371,7 @@ export class ProductsPageComponent implements OnInit {
     this.formError = null;
 
     const isEditing = this.selectedProduct() !== null;
-    const apiCall = isEditing 
+    const apiCall = isEditing
       ? this.productApi.updateProduct(this.selectedProduct()!.id!, { ...request, id: this.selectedProduct()!.id! })
       : this.productApi.createProduct(request);
 
