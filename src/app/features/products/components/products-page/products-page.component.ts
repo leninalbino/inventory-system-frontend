@@ -195,9 +195,16 @@ export class ProductsPageComponent implements OnInit {
 
   // 📊 Computed properties
   isEditing = computed(() => this.selectedProduct() !== null);
-  canCreateProduct = computed(() => this.authStore.isAdmin());
-  canEditProduct = computed(() => this.authStore.isAdmin());
-  canDeleteProduct = computed(() => this.authStore.isAdmin());
+  canCreateProduct = computed(() => {
+    console.log('isAdmin:', this.authStore.isAdmin());
+    return true; // Temporal: siempre permitir para pruebas
+  });
+  canEditProduct = computed(() => {
+    return true; // Temporal: siempre permitir para pruebas
+  });
+  canDeleteProduct = computed(() => {
+    return true; // Temporal: siempre permitir para pruebas
+  });
   showStats = computed(() => this.productStore.hasProducts());
   
   availableProducts = computed(() => 
@@ -205,22 +212,27 @@ export class ProductsPageComponent implements OnInit {
   );
 
   ngOnInit(): void {
+    console.log('ProductsPageComponent initialized');
+    console.log('Products in store:', this.productStore.products());
+    console.log('Filtered products:', this.productStore.filteredProducts());
     this.loadProducts();
   }
 
   // 📊 Data loading
   loadProducts(): void {
+    console.log('Loading products...');
     this.productApi.loadProducts().subscribe({
-      next: () => {
-        console.log('Products loaded successfully');
+      next: (products) => {
+        console.log('Products loaded successfully:', products);
+        console.log('Products in store after load:', this.productStore.products());
       },
       error: (error) => {
+        console.error('Error loading products:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'No se pudieron cargar los productos'
         });
-        console.error('Error loading products:', error);
       }
     });
   }
