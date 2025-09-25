@@ -156,23 +156,25 @@ import { Product, CreateProductRequest, SelectOption } from '../../models';
       </p-message>
 
       <!-- Botones -->
-      <div class="flex justify-content-end gap-2 mt-4">
+      <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 surface-border">
         <p-button
           type="button"
           label="Cancelar"
           icon="pi pi-times"
           severity="secondary"
           [outlined]="true"
-          (onClick)="onCancel()"
-          [disabled]="loading">
+          (click)="onCancel()"
+          [disabled]="loading"
+          [style]="{'min-width': '8rem'}">
         </p-button>
         
         <p-button
           type="submit"
-          [label]="isEditMode ? 'Actualizar' : 'Crear'"
-          [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'"
+          [label]="isEditMode ? 'Actualizar Producto' : 'Crear Producto'"
+          [icon]="loading ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')"
           [loading]="loading"
-          [disabled]="productForm.invalid">
+          [disabled]="productForm.invalid || loading"
+          [style]="{'min-width': '10rem'}">
         </p-button>
       </div>
     </form>

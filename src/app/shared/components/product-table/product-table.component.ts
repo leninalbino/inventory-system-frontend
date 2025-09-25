@@ -10,6 +10,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 
 import { Product } from '../../models';
@@ -26,6 +27,7 @@ import { Product } from '../../models';
     ButtonModule,
     TagModule,
     InputTextModule,
+    TooltipModule,
     FormsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,15 +84,17 @@ import { Product } from '../../models';
               </p-tag>
             </td>
             <td *ngIf="showActions">
-              <div class="flex gap-2">
+              <div class="flex gap-2 justify-content-center">
                 <p-button
                   icon="pi pi-pencil"
                   size="small"
-                  severity="secondary"
+                  severity="info"
                   [outlined]="true"
-                  pTooltip="Editar"
-                  (onClick)="onEdit(product)"
-                  [disabled]="!canEdit">
+                  pTooltip="Editar producto"
+                  tooltipPosition="top"
+                  (click)="onEdit(product)"
+                  [disabled]="!canEdit"
+                  [style]="{'min-width': '2.5rem'}">
                 </p-button>
                 
                 <p-button
@@ -98,9 +102,11 @@ import { Product } from '../../models';
                   size="small"
                   severity="danger"
                   [outlined]="true"
-                  pTooltip="Eliminar"
-                  (onClick)="onDelete(product)"
-                  [disabled]="!canDelete">
+                  pTooltip="Eliminar producto"
+                  tooltipPosition="top"
+                  (click)="onDelete(product)"
+                  [disabled]="!canDelete"
+                  [style]="{'min-width': '2.5rem'}">
                 </p-button>
               </div>
             </td>
@@ -174,10 +180,12 @@ export class ProductTableComponent {
   }
 
   onEdit(product: Product): void {
+    console.log('Table: Edit button clicked for product:', product);
     this.edit.emit(product);
   }
 
   onDelete(product: Product): void {
+    console.log('Table: Delete button clicked for product:', product);
     this.delete.emit(product);
   }
 

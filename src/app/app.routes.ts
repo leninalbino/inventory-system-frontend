@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
-import { ProductsComponent } from './components/products/products.component';
+import { ProductsPageComponent } from './features/products/components/products-page/products-page.component';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
   { path: 'register', component: RegisterComponent },
   { 
     path: 'products', 
-    component: ProductsComponent, 
+    component: ProductsPageComponent, 
     canActivate: [AuthGuard],
     data: { 
       title: 'Productos', 

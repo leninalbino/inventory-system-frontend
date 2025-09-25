@@ -8,11 +8,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
 
-import { Product } from '../../../../shared/models';
+import { Product, CreateProductRequest, UpdateProductRequest, SelectOption } from '../../../../shared/models';
 import { ProductStore } from '../../../../core/services/product.store';
 import { AuthStore } from '../../../../core/services/auth.store';
 import { ProductApiService } from '../../services/product-api.service';
 import { ProductTableComponent } from '../../../../shared/components/product-table/product-table.component';
+import { ProductFormComponent } from '../../../../shared/components/product-form/product-form.component';
 import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
 
 /**
@@ -25,6 +26,7 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
   imports: [
     CommonModule,
     ProductTableComponent,
+    ProductFormComponent,
     ToastModule,
     ToolbarModule,
     ButtonModule,
@@ -132,31 +134,22 @@ import { APP_CONSTANTS } from '../../../../core/constants/app.constants';
         (filterChange)="onFilterChange($event)">
       </app-product-table>
 
-      <!-- Dialog para crear/editar (placeholder) -->
+      <!-- Dialog para crear/editar -->
       <p-dialog 
         header="{{ isEditing() ? 'Editar Producto' : 'Nuevo Producto' }}"
         [modal]="true"
         [(visible)]="showDialog"
         [style]="{width: '600px'}"
-        [closable]="!productStore.loading()">
+        [closable]="!formLoading">
         
-        <div class="text-center p-4">
-          <p>Formulario de producto (por implementar)</p>
-          <p *ngIf="selectedProduct()">Editando: {{ selectedProduct()?.name }}</p>
-        </div>
-        
-        <div class="flex justify-content-end gap-2 pt-4">
-          <p-button 
-            label="Cancelar" 
-            severity="secondary" 
-            [outlined]="true"
-            (onClick)="closeDialog()">
-          </p-button>
-          <p-button 
-            label="{{ isEditing() ? 'Actualizar' : 'Crear' }}"
-            (onClick)="saveProduct()">
-          </p-button>
-        </div>
+        <app-product-form
+          [product]="selectedProduct()"
+          [categories]="categories"
+          [loading]="formLoading"
+          [formError]="formError"
+          (save)="onSaveProduct($event)"
+          (cancel)="closeDialog()">
+        </app-product-form>
       </p-dialog>
     </div>
 
@@ -189,6 +182,16 @@ export class ProductsPageComponent implements OnInit {
   // 🔄 Estado local del componente
   showDialog = false;
   selectedProduct = signal<Product | null>(null);
+  formLoading = false;
+  formError: string | null = null;
+  
+  // 📝 Datos para el formulario
+  categories: SelectOption<number>[] = [
+    { label: 'Electrónica', value: 1 },
+    { label: 'Hogar', value: 2 },
+    { label: 'Ropa', value: 3 },
+    { label: 'Deportes', value: 4 }
+  ];
 
   // 📊 Computed properties
   isEditing = computed(() => this.selectedProduct() !== null);
@@ -233,28 +236,49 @@ export class ProductsPageComponent implements OnInit {
   }
 
   openCreateDialog(): void {
+    console.log('Opening create dialog');
     this.selectedProduct.set(null);
+    this.formError = null;
     this.showDialog = true;
   }
 
   openEditDialog(product: Product): void {
+    console.log('Opening edit dialog for product:', product);
     this.selectedProduct.set(product);
+    this.formError = null;
     this.showDialog = true;
   }
 
   closeDialog(): void {
     this.showDialog = false;
     this.selectedProduct.set(null);
+    this.formError = null;
+    this.formLoading = false;
   }
 
-  saveProduct(): void {
-    // Placeholder - aquí iría la lógica de guardado
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Info',
-      detail: 'Funcionalidad de guardado por implementar'
+  onSaveProduct(request: CreateProductRequest): void {
+    this.formLoading = true;
+    this.formError = null;
+
+    const isEditing = this.selectedProduct() !== null;
+    const apiCall = isEditing 
+      ? this.productApi.updateProduct(this.selectedProduct()!.id!, { ...request, id: this.selectedProduct()!.id! })
+      : this.productApi.createProduct(request);
+
+    apiCall.subscribe({
+      next: (product) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: isEditing ? 'Producto Actualizado' : 'Producto Creado',
+          detail: `"${product.name}" ${isEditing ? 'actualizado' : 'creado'} correctamente`
+        });
+        this.closeDialog();
+      },
+      error: (error) => {
+        this.formError = error.message || 'Error al guardar el producto';
+        this.formLoading = false;
+      }
     });
-    this.closeDialog();
   }
 
   confirmDelete(product: Product): void {
